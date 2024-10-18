@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dao.WuziDao">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        a.id as id
+        ,a.wuzi_uuid_number as wuziUuidNumber
+        ,a.wuzi_name as wuziName
+        ,a.wuzi_photo as wuziPhoto
+        ,a.wuzi_types as wuziTypes
+        ,a.wuzi_kucun_number as wuziKucunNumber
+        ,a.wuzi_old_money as wuziOldMoney
+        ,a.wuzi_new_money as wuziNewMoney
+        ,a.wuzi_clicknum as wuziClicknum
+        ,a.wuzi_content as wuziContent
+        ,a.shangxia_types as shangxiaTypes
+        ,a.wuzi_delete as wuziDelete
+        ,a.insert_time as insertTime
+        ,a.create_time as createTime
+    </sql>
+    <select id="selectListView" parameterType="map" resultType="com.entity.view.WuziView" >
+        SELECT
+        <include refid="Base_Column_List" />
+        <!-- 级联表的字段 -->
+
+        FROM wuzi  a
+
+        <where>
+            <if test="params.ids != null">
+                and a.id in
+                <foreach item="item" index="index" collection="params.ids" open="(" separator="," close=")">
+                #{item}
+                </foreach>
+            </if>
+            <if test=" params.wuziUuidNumber != '' and params.wuziUuidNumber != null and params.wuziUuidNumber != 'null' ">
+                and a.wuzi_uuid_number like CONCAT('%',#{params.wuziUuidNumber},'%')
+            </if>
+            <if test=" params.wuziName != '' and params.wuziName != null and params.wuziName != 'null' ">
+                and a.wuzi_name like CONCAT('%',#{params.wuziName},'%')
+            </if>
+            <if test="params.wuziTypes != null and params.wuziTypes != ''">
+                and a.wuzi_types = #{params.wuziTypes}
+            </if>
+            <if test="params.wuziKucunNumberStart != null and params.wuziKucunNumberStart != ''">
+                <![CDATA[  and a.wuzi_kucun_number >= #{params.wuziKucunNumberStart}   ]]>
+            </if>
+            <if test="params.wuziKucunNumberEnd != null and params.wuziKucunNumberEnd != ''">
+                <![CDATA[  and a.wuzi_kucun_number <= #{params.wuziKucunNumberEnd}   ]]>
+            </if>
+             <if test="params.wuziKucunNumber != null and params.wuziKucunNumber != ''">
+                and a.wuzi_kucun_number = #{params.wuziKucunNumber}
+             </if>
+            <if test="params.wuziOldMoneyStart != null ">
+                <![CDATA[  and a.wuzi_old_money >= #{params.wuziOldMoneyStart}   ]]>
+            </if>
+            <if test="params.wuziOldMoneyEnd != null ">
+                <![CDATA[  and a.wuzi_old_money <= #{params.wuziOldMoneyEnd}   ]]>
+            </if>
+            <if test="params.wuziNewMoneyStart != null ">
+                <![CDATA[  and a.wuzi_new_money >= #{params.wuziNewMoneyStart}   ]]>
+            </if>
+            <if test="params.wuziNewMoneyEnd != null ">
+                <![CDATA[  and a.wuzi_new_money <= #{params.wuziNewMoneyEnd}   ]]>
+            </if>
+            <if test="params.wuziClicknumStart != null and params.wuziClicknumStart != ''">
+                <![CDATA[  and a.wuzi_clicknum >= #{params.wuziClicknumStart}   ]]>
+            </if>
+            <if test="params.wuziClicknumEnd != null and params.wuziClicknumEnd != ''">
+                <![CDATA[  and a.wuzi_clicknum <= #{params.wuziClicknumEnd}   ]]>
+            </if>
+             <if test="params.wuziClicknum != null and params.wuziClicknum != ''">
+                and a.wuzi_clicknum = #{params.wuziClicknum}
+             </if>
+            <if test=" params.wuziContent != '' and params.wuziContent != null and params.wuziContent != 'null' ">
+                and a.wuzi_content like CONCAT('%',#{params.wuziContent},'%')
+            </if>
+            <if test="params.shangxiaTypes != null and params.shangxiaTypes != ''">
+                and a.shangxia_types = #{params.shangxiaTypes}
+            </if>
+            <if test="params.wuziDeleteStart != null and params.wuziDeleteStart != ''">
+                <![CDATA[  and a.wuzi_delete >= #{params.wuziDeleteStart}   ]]>
+            </if>
+            <if test="params.wuziDeleteEnd != null and params.wuziDeleteEnd != ''">
+                <![CDATA[  and a.wuzi_delete <= #{params.wuziDeleteEnd}   ]]>
+            </if>
+             <if test="params.wuziDelete != null and params.wuziDelete != ''">
+                and a.wuzi_delete = #{params.wuziDelete}
+             </if>
+            <if test=" params.insertTimeStart != '' and params.insertTimeStart != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(a.insert_time) >= UNIX_TIMESTAMP(#{params.insertTimeStart}) ]]>
+            </if>
+            <if test=" params.insertTimeEnd != '' and params.insertTimeEnd != null ">
+                <![CDATA[  and UNIX_TIMESTAMP(a.insert_time) <= UNIX_TIMESTAMP(#{params.insertTimeEnd}) ]]>
+            </if>
+
+        </where>
+        order by a.${params.sort} ${params.order}
+    </select>
+
+</mapper>
